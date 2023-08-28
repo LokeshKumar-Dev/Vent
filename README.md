@@ -1,6 +1,6 @@
 # Vent: Cross-Chain Event Management and Payment Platform
 
-![Vent Logo]() <!-- Replace with your logo -->
+![Home](./images/vent01.png)
 
 Vent is an innovative cross-chain multi-chain DeFi dApp that revolutionizes event organization and payment management. It empowers event organizers to streamline operations and offers users versatile payment methods. By leveraging cutting-edge technologies, including Spruce ID for event verification, Vent ensures security, inclusivity, and efficient transactions.
 
@@ -14,6 +14,8 @@ Vent is an innovative cross-chain multi-chain DeFi dApp that revolutionizes even
   - **Squid Swap & Axelar Native Swap:** Seamlessly swap assets across different blockchains.
 
 - **Spruce ID Verification:** Enhance security and authenticity by integrating Spruce ID for event verification, ensuring trustworthy and verified events.
+![Spruce](./images/vent05.png)
+
 ## Architecture
 
 ### Frontend
@@ -65,7 +67,7 @@ Vent is an innovative cross-chain multi-chain DeFi dApp that revolutionizes even
 Contributions are welcome! Please follow our [Contribution Guidelines](CONTRIBUTING.md).
 
 ## License
-
+![Vent Logo](./images/logo.webp) 
 This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
