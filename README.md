@@ -3,6 +3,7 @@
 ![Home](./images/vent01.png)
 
 Vent is an innovative cross-chain multi-chain DeFi dApp that revolutionizes event organization and payment management. It empowers event organizers to streamline operations and offers users versatile payment methods. By leveraging cutting-edge technologies, including Spruce ID for event verification, Vent ensures security, inclusivity, and efficient transactions.
+[**Youtube video link of all featuers**](https://www.youtube.com/watch?v=IQdW3zeSDJE&t=328s)
 
 ## Features
 
