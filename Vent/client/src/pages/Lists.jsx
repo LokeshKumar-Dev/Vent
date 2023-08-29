@@ -6,12 +6,10 @@ import Card from "../components/home/Card";
 import NotConnected from "../components/NotConnected";
 
 import { useVent } from "../Context";
-import VentDB from "./../api";
 
 export default function Lists() {
   const { currentAccount } = useVent();
 
-  console.log("Lists");
   return (
     <>
       {/* <h2>Last Paid</h2>

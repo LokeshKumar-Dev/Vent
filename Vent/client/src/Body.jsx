@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import AllVents from "./pages/AllVents";
 import Lists from "./pages/Lists";
@@ -11,6 +11,22 @@ import { useVent } from "./Context";
 export default function Body() {
   const { SidebarCtx } = useVent();
   const { sidebar } = SidebarCtx;
+
+  const history = useNavigate();
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (window.location.pathname !== "/") {
+        history("/");
+      }
+    };
+
+    window.addEventListener("unload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("unload", handleBeforeUnload);
+    };
+  }, [history]);
 
   return (
     <>

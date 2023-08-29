@@ -370,17 +370,18 @@ export function SideBarForOwner() {
   }, [sidebar]);
 
   const handleDelete = async () => {
+    Contract.on("EventDeleted", async (from, eventId) => {
+      console.log("eventDeleted", from, eventId);
+      await VentDB.delete(`/${sidebar?.chainName}/${sidebar?.showId}`);
+      //Mongo delete event
+      message.success("Deleted");
+      handleSidebar(false);
+    });
     try {
-      Contract.on("EventDeleted", async (from, eventId) => {
-        console.log("eventDeleted", from, eventId);
-        eventId = ethers.BigNumber.from(eventId).toNumber();
-        await VentDB.delete(`/${sidebar?.chainName}/${eventId}`);
-        //Mongo delete event
-        message.success("Deleted");
-        handleSidebar(false);
-      });
       await Contract.deleteEvent(sidebar?.showId);
+      console.log("try");
     } catch (err) {
+      console.log("catch");
       console.log(err);
     }
   };
