@@ -409,9 +409,7 @@ ventRouter.delete(
       .then((obj) => {
         //Checks Deleted by Count
         return res.status(200).json({
-          msg: "Deleted Success",
-          pages: totalPages,
-          total: totalTransactions,
+          msg: "Deleted Success"
         }); //Deleted
       })
       .catch((err) => {
