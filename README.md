@@ -1,6 +1,6 @@
 # Vent: Cross-Chain Event Management and Payment Platform
 ## Vent - Fusing (E)vents with Cross-Chain Connectivity. Just like Vent connects spaces, we connect Ethereum, Avalanche, Polygon, Fantom and Moonbase
-If it makes error on moonbeam, fantom. Then try swap on avalanche, polygon, goerila for confirmation (SWAP is more active on these chains)
+SWAP & SEND: If it makes error on moonbeam, fantom. Then try swap on avalanche, polygon, goerila for confirmation (SWAP is more active on these chains)
 ![Home](./images/vent01.png)
 
 Vent is an innovative cross-chain multi-chain DeFi dApp that revolutionizes event organization and payment management. It empowers event organizers to streamline operations and offers users versatile payment methods. By leveraging cutting-edge technologies, including Spruce ID for event verification, Vent ensures security, inclusivity, and efficient transactions.
