@@ -645,15 +645,25 @@ export function VentProvider({ children }) {
       setModal({ ...modal, open2: false, staffId: null });
     });
     const { vent2, staffId } = modal;
-    console.log("value vent2", values, vent2, staffId, amount_wei);
+    const currentAddress = signer && (await signer.getAddress());
+    console.log(
+      "value vent2",
+      values,
+      vent2,
+      staffId,
+      amount_wei,
+      currentAddress
+    );
     if (isSameChain(fromNetwork) && vent2) {
       //Check balance
       //Checkers
-      if (staffId !== null && staffId >= 0) {
+      // if (staffId !== null && staffId >= 0) {
+      const isOwner = isSameAddress(vent2.owner, currentAddress);
+      if ((currentAddress && isOwner) || (staffId !== null && staffId >= 0)) {
         //======SEND======
         if (String(fromCoin).toLowerCase() === "ausdc") {
           contract
-            .staff_pay_token(vent2.uid, staffId, amount_wei, receiver, name)
+            .staff_pay_token(vent2.uid, isOwner ? 0 : staffId, amount_wei, receiver, name)
             .then((tx) => {
               console.log("SEND", tx);
               updateBalance(
@@ -669,7 +679,7 @@ export function VentProvider({ children }) {
             });
         } else {
           contract
-            .staff_pay_native(vent2.uid, staffId, amount_wei, receiver, name)
+            .staff_pay_native(vent2.uid, isOwner ? 0 : staffId, amount_wei, receiver, name)
             .then((tx) => {
               console.log("SEND", tx);
               updateBalance(
@@ -684,6 +694,8 @@ export function VentProvider({ children }) {
               console.error(err);
             });
         }
+      } else {
+        setLoading(false);
       }
     } else {
       switchNetwork(fromNetwork);
