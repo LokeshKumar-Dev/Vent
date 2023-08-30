@@ -22,6 +22,8 @@ app.get("/", (req, res) => {
 });
 
 const ventRoutes = require("./VentRoutes");
+const transactionRoutes = require("./TransactionRoutes");
+app.use("/api/vent/transaction", transactionRoutes);
 app.use("/api/vent", ventRoutes);
 
 const PORT = process.env.PORT;
