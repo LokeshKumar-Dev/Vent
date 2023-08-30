@@ -28,7 +28,7 @@ export default function Header() {
       <div className="header--1">
         <input
           type="text"
-          placeholder="Search by vent id"
+          placeholder="Add by vent id"
           style={{
             cursor: input.bool ? "text" : "not-allowed",
           }}
@@ -44,6 +44,7 @@ export default function Header() {
               await VentDB.put(`/save/${input.value}`, {
                 address: currentAccount,
               });
+              setInput({ ...input, value: "" });
               message.success("Vent added");
             } catch (err) {
               message.error("No vents found");
@@ -51,7 +52,7 @@ export default function Header() {
             setInput({ ...input, value: "" });
           }}
         >
-          <GoSearch />
+          Add Vent
         </button>
       </div>
 

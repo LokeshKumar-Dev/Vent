@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { Button, Empty, Select } from "antd";
+import DotLoader from "react-spinners/DotLoader";
 
+import Card from "../components/home/Card";
 import OwnCard from "../components/dashboard/OwnCard";
 import { GoPlus } from "react-icons/go";
 import { useVent } from "../Context";
 import NotConnected from "../components/NotConnected";
-
-import { Empty } from "antd";
 
 export default function Dashboard({}) {
   const {
@@ -76,6 +77,115 @@ export default function Dashboard({}) {
           description={`Sorry, no vents created yet!`}
         />
       )}
+      <h2>Joined Vents</h2>
+      {currentAccount ? (
+        <JoinedVents />
+      ) : (
+        <>
+          <div
+            className="flex-column align-center justify-center"
+            style={{ height: "30%" }}
+          >
+            <NotConnected />
+          </div>
+        </>
+      )}
     </>
   );
 }
+
+const JoinedVents = ({}) => {
+  const {
+    flag,
+    flagJoined,
+    constants,
+    currentNetwork,
+    Contract,
+    joinedVents,
+    getJoinedVents,
+    switchNetwork,
+  } = useVent();
+  const { networks } = constants;
+
+  const [loading, setLoading] = useState(false);
+  const [selectedChain, setSelectedChain] = useState("");
+
+  async function _getjoined() {
+    setLoading(true);
+    await getJoinedVents();
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    if (selectedChain !== currentNetwork) {
+      setSelectedChain(currentNetwork);
+    }
+  }, [currentNetwork]);
+
+  useEffect(() => {
+    if (Contract && !flag.lists_joined) _getjoined();
+  }, [Contract, flag, currentNetwork]);
+
+  return (
+    <>
+      <div className="flex-row align-center" style={{ gap: "1rem" }}>
+        <Select
+          value={selectedChain}
+          defaultValue={selectedChain.toLowerCase()}
+          style={{
+            width: "150px",
+          }}
+          onChange={(e) => {
+            setSelectedChain(e);
+            if (e.toLowerCase() === currentNetwork.toLowerCase())
+              return flagJoined(true);
+
+            flagJoined(false);
+          }}
+          options={networks.map((e) =>
+            e.value !== currentNetwork
+              ? e
+              : { ...e, label: `${e.label}  (active)` }
+          )}
+        />
+        <Button
+          className="btn btn--primary"
+          disabled={
+            currentNetwork.toLowerCase() === selectedChain.toLowerCase()
+          }
+          style={{
+            // width: "100px",
+            padding: "0 1rem",
+            fontSize: ".8rem",
+            fontWeight: "700",
+          }}
+          onClick={() => switchNetwork(selectedChain)}
+        >
+          Switch Network
+        </Button>
+      </div>
+      {loading ? (
+        <div
+          className="flex-column justify-center align-center"
+          style={{ height: "30%" }}
+        >
+          <DotLoader size={30} color="blue" />
+        </div>
+      ) : joinedVents && joinedVents.length > 0 ? (
+        <>
+          <div className="events events-box" style={{ marginTop: "2rem" }}>
+            {joinedVents.map((vent) => (
+              <Card id={vent.uid} vent={vent} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <Empty
+          style={{ height: "40%" }}
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={`Sorry, there is no vents you joined in this chain!`}
+        />
+      )}
+    </>
+  );
+};

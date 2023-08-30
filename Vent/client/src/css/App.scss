@@ -79,7 +79,8 @@ header,
       background-color: transparent;
       border: none;
       height: 100%;
-      width: 50px;
+      // width: 50px;
+      width: 150px;
       border-radius: 0 5px 5px 0;
       border: 1px solid variables.$gray;
       svg {
@@ -480,7 +481,7 @@ header,
     bottom: 3rem;
     font-size: 1rem;
   }
-  
+
   .image {
     position: absolute;
     top: 15px;
@@ -616,7 +617,7 @@ header,
 .paid-box {
   display: flex;
   flex-direction: column;
-  width: 70vw;
+  width: 80vw;
   max-height: 50%;
 
   min-height: fit-content;
@@ -650,6 +651,23 @@ header,
       height: 80%;
       margin-right: 0.2rem;
     }
+
+    //ICON
+    #box {
+      height: 1.8rem;
+      width: 1.8rem;
+      // padding: .2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid rgba(variables.$gray-dark, 0.3);
+      border-radius: 3px;
+      margin-right: 0.4rem;
+
+      svg {
+        fill: variables.$gray-dark;
+      }
+    }
   }
 
   &__network {
@@ -666,12 +684,13 @@ header,
     font-size: 1rem;
     font-weight: 400;
 
-    width: 150px;
+    width: 160px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   &__type {
+    width: 100px;
     font-size: 0.9rem;
     font-weight: 300;
     color: rgba(variables.$gray-dark, 0.9);
@@ -699,6 +718,7 @@ header,
   }
 
   &__from {
+    width: 150px;
     font-size: 0.8rem;
     font-weight: 300;
     color: rgba(variables.$gray-dark, 0.9);
@@ -713,6 +733,7 @@ header,
   }
 
   &__time {
+    width: 100px;
     font-size: 1rem;
     color: rgba(variables.$gray-dark, 0.8);
   }
@@ -721,6 +742,11 @@ header,
     font-size: 1.2rem;
     font-weight: 500;
     color: rgba(variables.$gray-dark, 1);
+    width: 90px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
     span {
       font-size: 1rem;
       font-weight: 300;

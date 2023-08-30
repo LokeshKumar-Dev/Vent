@@ -252,6 +252,7 @@ export function VentProvider({ children }) {
       console.log("err", er);
     }
   };
+
   //---Modals
   const [sidebar, setSidebar] = useState({
     //For Vent Details
@@ -488,16 +489,30 @@ export function VentProvider({ children }) {
     // receiver: "0xF747F92b123Aca5Af635d1073796129318E4791C";
     // toCoin: Array[("MATIC", false)];
     // toNetwork: "polygon";
-    contract.on("SponsorAdded", (name, from, amount, spondorId) => {
-      console.log("SponsorAdded", name, from, amount, spondorId);
+    console.log("Sponsor starts");
+    const { vent2 } = modal;
+    const currentAddress = await signer.getAddress();
+
+    contract.on("SponsorAdded", async (name, from, amount, sponsorId) => {
+      if (isSameAddress(from, currentAddress)) {
+        let args = {
+          type: "send",
+          from,
+          name,
+          amount: amount_wei.toString(),
+          to: vent2.name,
+          fromChain: vent2.chainName,
+          toChain: vent2.chainName,
+          token: false,
+        };
+        await VentDB.post("/transaction", args);
+        setTransactionLists([args, ...transactionLists]);
+      }
+
       setLoading(false);
       setModal({ ...modal, open2: false });
-      if (isSameAddress(from, currentAccount)) {
-        // mongo update
-      }
     });
-    console.log("value", values);
-    const { vent2 } = modal;
+
     if (isSameChain(fromNetwork) && vent2 && Object.keys(vent2).length > 0) {
       //Check balance
       //Checkers
@@ -522,8 +537,25 @@ export function VentProvider({ children }) {
                 source,
                 destination,
                 setLoading
-              ).then((tx) => {
+              ).then(async (tx) => {
                 console.log("SEND", tx);
+
+                let args = {
+                  type: "cross",
+                  from: currentAddress,
+                  name,
+                  amount: amount_wei.toString(),
+                  to: vent2.name,
+                  fromChain: currentNetwork,
+                  toChain: vent2.chainName,
+                  token: true,
+                  hash: res.transactionHash,
+                };
+                //MONGO transaction
+                await VentDB.post("/transaction", args);
+                setTransactionLists([args, ...transactionLists]);
+
+                //MONGO balance
                 updateBalance(
                   toNetwork.toString(),
                   vent2.uid,
@@ -558,13 +590,8 @@ export function VentProvider({ children }) {
           });
         return;
       }
-      //======SWAP & SEND======
-      // setSwapForm({
-      //   fromCoin,
-      //   fromNetwork,
-      //   amount: amount.toString(),
-      // });
 
+      //======SWAP & SEND======
       const res = await swapFunction(
         source.native,
         source.name,
@@ -576,8 +603,24 @@ export function VentProvider({ children }) {
       //Called Status loader
       if (res) {
         setTransaction({ open: true, hash: res.transactionHash });
+
+        let args = {
+          type: "swap",
+          from: currentAddress,
+          name,
+          amount: amount_wei.toString(),
+          to: vent2.name,
+          fromChain: currentNetwork,
+          toChain: vent2.chainName,
+          token: false,
+          hash: res.transactionHash,
+        };
+        //MONGO transaction
+        await VentDB.post("/transaction", args);
+        setTransactionLists([args, ...transactionLists]);
       } else {
         message.error("Sorry swap is errored between those");
+        setLoading(false);
       }
       if (res && !transaction.open) {
         calculate_gasFee(source, destination).then(async (gasFee) => {
@@ -663,7 +706,13 @@ export function VentProvider({ children }) {
         //======SEND======
         if (String(fromCoin).toLowerCase() === "ausdc") {
           contract
-            .staff_pay_token(vent2.uid, isOwner ? 0 : staffId, amount_wei, receiver, name)
+            .staff_pay_token(
+              vent2.uid,
+              isOwner ? 0 : staffId,
+              amount_wei,
+              receiver,
+              name
+            )
             .then((tx) => {
               console.log("SEND", tx);
               updateBalance(
@@ -679,7 +728,13 @@ export function VentProvider({ children }) {
             });
         } else {
           contract
-            .staff_pay_native(vent2.uid, isOwner ? 0 : staffId, amount_wei, receiver, name)
+            .staff_pay_native(
+              vent2.uid,
+              isOwner ? 0 : staffId,
+              amount_wei,
+              receiver,
+              name
+            )
             .then((tx) => {
               console.log("SEND", tx);
               updateBalance(
@@ -1093,12 +1148,17 @@ export function VentProvider({ children }) {
   };
 
   const [savedVents, setSavedVents] = useState([]);
+  const [transactionLists, setTransactionLists] = useState([]);
   const getSavedVents = async () => {
     if (savedVents.length > 0 && flag.lists) return savedVents;
 
-    const { data } = await VentDB.get(`/saved/${currentAccount}`);
-
+    let { data } = await VentDB.get(`/saved/${currentAccount}`);
     setSavedVents(data.vent);
+
+    let res = await VentDB.get(`/transaction/${currentAccount}`);
+    setTransactionLists(res.data.transactions);
+
+    console.log("tra", res);
     setFlag({ ...flag, lists: true });
     return data.vent;
   };
@@ -1176,6 +1236,10 @@ export function VentProvider({ children }) {
     });
     // console.log("context useEffect");
     // setVents(vents);
+
+    return () => {
+      // contract.re
+    };
   }, []);
 
   return (
@@ -1197,6 +1261,7 @@ export function VentProvider({ children }) {
         Vents,
         ownVents,
         savedVents,
+        transactionLists,
         SidebarCtx,
         modal,
         apply,
